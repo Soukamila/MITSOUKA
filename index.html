@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>The Mitsouka Times — Special Edition</title>
+<meta name="description" content="Mitsouka Lumérant — IT student, builder, woman in technology.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --paper:#eee5d1;
+  --paper2:#e3d7bb;
+  --white:#f8f1df;
+  --ink:#171512;
+  --muted:#625847;
+  --line:#9f9278;
+  --red:#8e2821;
+  --red2:#641d18;
+  --yellow:#d4ae42;
+  --serif:"Libre Baskerville",Georgia,serif;
+  --display:"Playfair Display",Georgia,serif;
+  --sans:"Bebas Neue",Impact,sans-serif;
+  --mono:"DM Mono",monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden}
+body{
+  color:var(--ink);
+  background:
+    radial-gradient(circle at 20% 10%,rgba(255,255,255,.55),transparent 25%),
+    repeating-linear-gradient(0deg,rgba(0,0,0,.018) 0 1px,transparent 1px 4px),
+    var(--paper);
+  font-family:var(--serif);
+}
+button,a{font:inherit}
+button{cursor:pointer}
+a{color:inherit}
+
+/* ---------- opening newspaper ---------- */
+.loader{
+  position:fixed;inset:0;z-index:1000;
+  background:#171512;
+  display:grid;place-items:center;
+  transition:opacity .8s ease,visibility .8s ease;
+}
+.loader.done{opacity:0;visibility:hidden;pointer-events:none}
+.paper-opening{
+  width:min(760px,86vw);height:min(520px,66vh);
+  position:relative;perspective:1400px;
+}
+.sheet{
+  position:absolute;inset:0;
+  background:var(--paper);
+  border:2px solid #090909;
+  box-shadow:0 25px 70px rgba(0,0,0,.5);
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+}
+.sheet:before{
+  content:"THE MITSOUKA TIMES";
+  font:clamp(35px,7vw,72px)/1 var(--sans);
+  letter-spacing:.01em;
+}
+.sheet:after{
+  content:"SPECIAL EDITION  •  PORT-AU-PRINCE  •  2026";
+  position:absolute;bottom:20px;left:0;right:0;text-align:center;
+  font:10px var(--mono);letter-spacing:.18em;
+}
+.sheet.left,.sheet.right{width:50%;background:var(--paper)}
+.sheet.left{transform-origin:right center;left:0;animation:openLeft 1.8s cubic-bezier(.77,0,.18,1) .35s forwards}
+.sheet.right{transform-origin:left center;right:0;animation:openRight 1.8s cubic-bezier(.77,0,.18,1) .35s forwards}
+.loader-copy{
+  position:absolute;bottom:35px;left:0;right:0;text-align:center;
+  color:#ddd1b9;font:10px var(--mono);letter-spacing:.2em;
+  animation:pulse 1.2s infinite alternate;
+}
+@keyframes openLeft{to{transform:rotateY(-105deg)}}
+@keyframes openRight{to{transform:rotateY(105deg)}}
+@keyframes pulse{to{opacity:.35}}
+@media(max-width:600px){.paper-opening{height:48vh}.sheet:after{font-size:8px}}
+
+/* ---------- fixed masthead ---------- */
+.site{
+  height:100vh;opacity:0;
+  animation:siteIn .9s ease 1.65s forwards;
+}
+@keyframes siteIn{to{opacity:1}}
+.masthead{
+  height:92px;position:fixed;z-index:50;top:0;left:0;right:0;
+  background:rgba(238,229,209,.96);
+  backdrop-filter:blur(8px);
+  border-bottom:4px double var(--ink);
+}
+.mast-top{
+  height:26px;border-bottom:1px solid var(--line);
+  display:flex;justify-content:space-between;align-items:center;
+  padding:0 28px;font:9px var(--mono);letter-spacing:.08em;text-transform:uppercase;
+}
+.mast-brand{
+  height:66px;display:flex;align-items:center;justify-content:space-between;
+  padding:0 28px;gap:20px;
+}
+.logo{
+  font:clamp(28px,4vw,49px)/1 var(--sans);
+  letter-spacing:.015em;white-space:nowrap;
+}
+.logo span{color:var(--red)}
+.issue{
+  font:9px var(--mono);letter-spacing:.1em;text-align:right;
+}
+.issue strong{font-size:12px}
+.progress{
+  position:absolute;bottom:-4px;left:0;height:4px;background:var(--red);
+  width:16.66%;transition:width .6s cubic-bezier(.22,1,.36,1);
+}
+@media(max-width:650px){
+  .masthead{height:74px}.mast-top{display:none}.mast-brand{height:70px;padding:0 16px}
+  .issue{font-size:8px}.issue strong{font-size:10px}
+}
+
+/* ---------- horizontal newspaper ---------- */
+.reader{
+  position:relative;width:100%;height:100vh;
+  overflow-x:auto;overflow-y:hidden;
+  display:flex;scroll-snap-type:x mandatory;
+  scrollbar-width:none;
+  overscroll-behavior-x:contain;
+}
+.reader::-webkit-scrollbar{display:none}
+.page{
+  min-width:100vw;width:100vw;height:100vh;
+  scroll-snap-align:start;position:relative;
+  padding:116px 6vw 48px;
+  overflow:hidden;
+}
+.page-inner{
+  height:100%;max-width:1260px;margin:auto;
+  position:relative;display:flex;flex-direction:column;
+}
+.eyebrow{
+  font:10px var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--red);
+  margin:0 0 10px;
+}
+.eyebrow:before{content:"◆  "}
+.page-title{
+  font:clamp(48px,7vw,100px)/.88 var(--display);
+  letter-spacing:-.045em;margin:0;max-width:1000px;
+}
+.page-title em{color:var(--red)}
+.rule{border:0;border-top:2px solid var(--ink);margin:18px 0}
+.page-number{
+  position:absolute;right:0;top:0;font:10px var(--mono);letter-spacing:.1em;
+  border:1px solid var(--ink);padding:7px 10px;
+}
+.page-number b{font-size:17px}
+
+/* ---------- PAGE 1 / cover ---------- */
+.cover{background:var(--paper)}
+.cover-grid{
+  display:grid;grid-template-columns:1.05fr .95fr;gap:4vw;height:100%;
+  align-items:center;
+}
+.cover-copy{padding-top:5vh}
+.kicker-big{
+  font:clamp(15px,1.6vw,23px)/1.1 var(--sans);
+  letter-spacing:.05em;text-transform:uppercase;
+  border-top:5px solid var(--ink);border-bottom:1px solid var(--ink);
+  padding:9px 0;margin-bottom:20px;display:inline-block;
+}
+.cover-title{
+  font:clamp(55px,8.5vw,126px)/.78 var(--display);
+  letter-spacing:-.06em;margin:0;
+}
+.cover-title .red{color:var(--red);font-style:italic}
+.cover-sub{
+  max-width:620px;font:italic clamp(16px,1.6vw,22px)/1.45 var(--serif);
+  margin:26px 0 24px;
+}
+.cover-meta{
+  display:flex;gap:18px;flex-wrap:wrap;
+  font:9px var(--mono);letter-spacing:.08em;text-transform:uppercase;
+}
+.cover-meta span{border-left:3px solid var(--red);padding-left:8px}
+.cover-art{position:relative;height:min(72vh,720px);display:flex;align-items:center;justify-content:center}
+.photo{
+  width:min(470px,86%);height:100%;object-fit:cover;
+  filter:grayscale(1) contrast(1.2);
+  border:2px solid var(--ink);
+  box-shadow:15px 15px 0 var(--ink);
+}
+.halftone{
+  position:absolute;inset:5% 4% 2% 6%;pointer-events:none;
+  background-image:radial-gradient(rgba(255,255,255,.5) 1px,transparent 1px);
+  background-size:5px 5px;mix-blend-mode:screen;opacity:.18;
+}
+.cover-stamp{
+  position:absolute;left:0;bottom:5%;background:var(--red);color:var(--paper);
+  width:120px;height:120px;border-radius:50%;display:grid;place-items:center;text-align:center;
+  font:12px var(--mono);line-height:1.2;transform:rotate(-13deg);
+  border:2px dashed var(--paper);
+}
+.cover-stamp:before{content:"";position:absolute;inset:7px;border:1px solid var(--paper);border-radius:50%}
+.cover-note{
+  position:absolute;right:-1%;top:10%;width:145px;background:var(--yellow);
+  padding:13px 12px;transform:rotate(5deg);box-shadow:4px 5px 0 rgba(0,0,0,.18);
+  font:10px/1.45 var(--mono);
+}
+@media(max-width:850px){
+  .page{padding:95px 22px 35px;overflow-y:auto}
+  .cover-grid{grid-template-columns:1fr;gap:15px}
+  .cover-copy{padding-top:0}.cover-art{height:48vh;min-height:270px}
+  .photo{width:60%;}.cover-note{right:2%;top:0}.cover-stamp{left:8%;bottom:2%;width:90px;height:90px;font-size:9px}
+}
+
+/* ---------- editorial pages ---------- */
+.story-grid{display:grid;grid-template-columns:1.5fr .8fr;gap:5vw;align-items:start}
+.lede{
+  font:clamp(20px,2.1vw,31px)/1.38 var(--serif);
+  max-width:760px;margin:0 0 20px;
+}
+.lede:first-letter{float:left;font:90px/.72 var(--display);padding:9px 10px 0 0;color:var(--red)}
+.columns{
+  column-count:2;column-gap:34px;font-size:14px;line-height:1.7;
+}
+.columns p{margin-top:0}
+.pull{
+  font:italic 25px/1.2 var(--display);
+  border-top:5px solid var(--red);border-bottom:1px solid var(--ink);
+  padding:16px 0;margin:25px 0;
+}
+.side-note{
+  background:var(--ink);color:var(--paper);padding:22px;
+  transform:rotate(1.2deg);box-shadow:8px 8px 0 var(--red);
+}
+.side-note h3{font:27px var(--display);margin:0 0 10px}
+.side-note p{font:13px/1.6 var(--serif);margin:0}
+.fact-list{list-style:none;padding:0;margin:18px 0 0}
+.fact-list li{padding:10px 0;border-bottom:1px solid #5d5549;font:10px/1.4 var(--mono);text-transform:uppercase}
+.fact-list b{color:#e4bc54}
+@media(max-width:850px){.story-grid{grid-template-columns:1fr}.columns{column-count:1}.side-note{margin-top:10px}}
+
+/* ---------- PAGE 3 / gate ---------- */
+.gate{
+  background:var(--ink);color:var(--paper);
+}
+.gate .eyebrow{color:#d5a3a0}
+.gate .page-title{color:var(--paper)}
+.gate .page-number{border-color:var(--paper)}
+.gate-grid{display:grid;grid-template-columns:1fr 1fr;gap:5vw;margin-top:30px;align-items:start}
+.gate-quote{
+  font:italic clamp(28px,4vw,58px)/1.05 var(--display);
+  border-left:7px solid var(--red);padding-left:25px;
+}
+.gate-copy{font-size:15px;line-height:1.7;color:#d5c9b2}
+.gate-copy strong{color:var(--paper)}
+.red-line{color:#d55b50;font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase}
+@media(max-width:850px){.gate-grid{grid-template-columns:1fr}.gate-copy{font-size:14px}}
+
+/* ---------- PAGE 4 / evidence ---------- */
+.evidence-grid{display:grid;grid-template-columns:1.1fr 1fr;gap:35px;min-height:0;flex:1}
+.manifesto{
+  border:2px solid var(--ink);padding:25px;
+  background:var(--white);box-shadow:10px 10px 0 rgba(23,21,18,.1);
+}
+.manifesto h3{font:34px var(--display);margin:0 0 12px}
+.manifesto p{font-size:14px;line-height:1.6}
+.skills{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.skill{
+  background:var(--ink);color:var(--paper);padding:15px;
+  min-height:105px;position:relative;
+}
+.skill:nth-child(2n){background:var(--red)}
+.skill b{display:block;font:24px var(--display);margin-bottom:8px}
+.skill span{font:9px var(--mono);letter-spacing:.06em;color:#e5dac5}
+@media(max-width:850px){.evidence-grid{grid-template-columns:1fr}.skills{grid-template-columns:1fr 1fr}.manifesto{padding:18px}.skill{min-height:85px}}
+
+/* ---------- PAGE 5 / projects ---------- */
+.projects{background:var(--paper2)}
+.project-layout{display:grid;grid-template-columns:1fr 2fr;gap:30px;flex:1;min-height:0}
+.project-lead{border-right:2px solid var(--ink);padding-right:28px}
+.project-lead h3{font:42px/.95 var(--display);margin:0 0 14px}
+.project-lead p{font-size:14px;line-height:1.6}
+.project-card{
+  background:var(--paper);border:2px solid var(--ink);padding:20px;
+  min-height:155px;margin-bottom:12px;display:grid;grid-template-columns:60px 1fr;
+  gap:18px;box-shadow:5px 5px 0 rgba(23,21,18,.1);
+  transition:transform .2s;
+}
+.project-card:hover{transform:translate(-3px,-3px)}
+.project-card .num{font:55px/.8 var(--sans);color:var(--red)}
+.project-card h4{font:23px var(--display);margin:0 0 6px}
+.project-card p{font-size:12px;line-height:1.5;margin:0}
+.tags{margin-top:8px;font:8px var(--mono);letter-spacing:.06em;text-transform:uppercase}
+.tags span{display:inline-block;border:1px solid var(--line);padding:4px 6px;margin:2px}
+@media(max-width:850px){.project-layout{grid-template-columns:1fr}.project-lead{border-right:0;border-bottom:2px solid var(--ink);padding:0 0 15px}.project-card{min-height:130px}}
+
+/* ---------- PAGE 6 / dispatch + future ---------- */
+.final-grid{display:grid;grid-template-columns:1fr 1fr;gap:45px;align-items:center;height:100%}
+.timeline{border-left:3px solid var(--ink);padding-left:25px}
+.event{margin:0 0 22px;position:relative}
+.event:before{content:"";width:11px;height:11px;border-radius:50%;background:var(--red);position:absolute;left:-32px;top:5px}
+.event .date{font:9px var(--mono);color:var(--red);letter-spacing:.1em;text-transform:uppercase}
+.event h3{font:24px var(--display);margin:3px 0}
+.event p{font-size:13px;line-height:1.5;margin:0}
+.future{
+  background:var(--ink);color:var(--paper);padding:35px;
+  min-height:390px;display:flex;flex-direction:column;justify-content:space-between;
+  box-shadow:12px 12px 0 var(--red);
+}
+.future small{font:9px var(--mono);letter-spacing:.15em}
+.future h2{font:clamp(50px,7vw,90px)/.82 var(--display);margin:0}
+.future h2 em{color:#d5a3a0}
+.future p{font-size:14px;line-height:1.55;max-width:500px}
+@media(max-width:850px){.final-grid{grid-template-columns:1fr;overflow:auto}.future{min-height:300px}.timeline{margin-bottom:10px}}
+
+
+/* ---------- PAGE 7 / contact ---------- */
+.contact-page{background:var(--paper)}
+.contact-layout{display:grid;grid-template-columns:1.05fr .95fr;gap:5vw;flex:1;align-items:center}
+.contact-intro h3{font:clamp(46px,6vw,82px)/.88 var(--display);letter-spacing:-.04em;margin:0 0 18px}
+.contact-intro h3 em{color:var(--red)}
+.contact-intro p{font-size:15px;line-height:1.7;max-width:620px}
+.contact-note{margin-top:22px;border-left:5px solid var(--red);padding:12px 15px;font:11px/1.55 var(--mono);text-transform:uppercase;letter-spacing:.05em}
+.contact-form{background:var(--white);border:2px solid var(--ink);padding:24px;box-shadow:10px 10px 0 var(--ink)}
+.contact-form .form-head{display:flex;justify-content:space-between;gap:15px;border-bottom:2px solid var(--ink);padding-bottom:12px;margin-bottom:14px}
+.contact-form .form-head strong{font:23px var(--display)}
+.contact-form .form-head span{font:9px var(--mono);text-transform:uppercase;color:var(--red)}
+.contact-form label{display:block;font:9px var(--mono);letter-spacing:.12em;text-transform:uppercase;margin:12px 0 5px}
+.contact-form input,.contact-form textarea{width:100%;border:0;border-bottom:1px solid var(--line);background:transparent;padding:8px 2px;color:var(--ink);font:14px var(--serif);outline:0}
+.contact-form input:focus,.contact-form textarea:focus{border-bottom:2px solid var(--red)}
+.contact-form textarea{min-height:105px;resize:vertical}
+.contact-submit{margin-top:16px;width:100%;border:0;background:var(--red);color:var(--paper);padding:13px;font:11px var(--mono);letter-spacing:.12em;text-transform:uppercase}
+.contact-submit:hover{background:var(--red2)}
+.contact-links{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+.contact-links a{border:1px solid var(--ink);padding:7px 10px;text-decoration:none;font:9px var(--mono);text-transform:uppercase}
+.contact-links a:hover{background:var(--ink);color:var(--paper)}
+@media(max-width:850px){.contact-layout{grid-template-columns:1fr;align-items:start}.contact-form{box-shadow:6px 6px 0 var(--ink)}.contact-intro h3{font-size:50px}}
+
+/* ---------- PAGE 8 / closing credits ---------- */
+.closing{background:var(--ink);color:var(--paper);text-align:center;overflow:hidden}
+.closing .page-number{border-color:#817769}
+.closing .eyebrow{color:#d6aaa4}
+.closing-inner{align-items:center;justify-content:center}
+.closing-mark{font:clamp(90px,18vw,260px)/.65 var(--display);color:var(--red);opacity:.92;letter-spacing:-.08em;margin-bottom:25px}
+.closing h2{font:clamp(45px,7vw,92px)/.9 var(--display);letter-spacing:-.05em;margin:0;max-width:1000px;color:var(--paper)}
+.closing h2 em{color:#d6aaa4}
+.closing p{max-width:620px;font-size:15px;line-height:1.7;color:#d1c5af;margin:25px auto}
+.closing-rule{width:150px;border:0;border-top:2px solid var(--paper);margin:25px auto}
+.close-meta{font:9px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:#a99c87}
+.reopen{margin-top:25px;border:1px solid var(--paper);background:transparent;color:var(--paper);padding:10px 18px;font:10px var(--mono);letter-spacing:.1em;text-transform:uppercase}
+.reopen:hover{background:var(--paper);color:var(--ink)}
+.closing:before,.closing:after{content:"";position:absolute;border:1px solid #5a5147;width:180px;height:180px;border-radius:50%;opacity:.45}
+.closing:before{left:-70px;top:18%}.closing:after{right:-80px;bottom:12%}
+
+/* ---------- controls ---------- */
+.reader-controls{
+  position:fixed;z-index:60;bottom:18px;left:50%;transform:translateX(-50%);
+  display:flex;align-items:center;gap:8px;background:rgba(23,21,18,.94);
+  padding:7px 9px;border:1px solid #4d473e;
+}
+.reader-controls button{
+  border:1px solid #8c806a;background:transparent;color:var(--paper);
+  width:35px;height:30px;font-size:15px;
+}
+.reader-controls button:hover{background:var(--red)}
+.dots{display:flex;gap:5px;padding:0 5px}
+.dot{width:6px;height:6px;border-radius:50%;background:#746c60;transition:.2s}
+.dot.active{background:#e2bb54;transform:scale(1.4)}
+.hint{
+  position:fixed;z-index:40;right:22px;bottom:20px;
+  font:8px var(--mono);letter-spacing:.08em;color:var(--muted);
+  text-transform:uppercase;writing-mode:vertical-rl;
+}
+@media(max-width:700px){.hint{display:none}.reader-controls{bottom:10px}.reader-controls button{width:31px}}
+
+.cv-button{display:inline-block;padding:10px 13px;border:1px solid var(--ink);background:var(--ink);color:var(--paper);font:700 10px var(--mono);letter-spacing:.08em;text-decoration:none;box-shadow:4px 4px 0 var(--red);transition:.2s ease}
+.cv-button:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--red);background:var(--red)}
+.project-result{margin-top:10px;font:700 9px var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--red)}
+</style>
+
+
+
+<style id="normal-site-reading">
+/* ==========================================================
+   NORMAL WEB READING
+   The newspaper concept stays; the interaction becomes familiar.
+   ========================================================== */
+html,body{
+  width:100%;
+  min-height:100%;
+  height:auto;
+  overflow-x:hidden;
+  overflow-y:auto;
+}
+body{scroll-behavior:smooth}
+.site{height:auto;min-height:100vh}
+
+.reader{
+  position:relative;
+  width:100%;
+  height:auto;
+  overflow:visible;
+  display:block;
+  scroll-snap-type:none;
+  overscroll-behavior:auto;
+}
+.reader::-webkit-scrollbar{width:10px}
+.reader::-webkit-scrollbar-thumb{background:var(--ink);border:3px solid var(--paper)}
+.reader::-webkit-scrollbar-track{background:var(--paper2)}
+
+.page{
+  width:100%;
+  min-width:0;
+  min-height:100vh;
+  height:auto;
+  scroll-snap-align:none;
+  position:relative;
+  padding:116px 6vw 72px;
+  overflow:visible;
+}
+.page + .page{
+  border-top:1px solid rgba(23,21,18,.16);
+}
+.page-inner{
+  height:auto;
+  min-height:calc(100vh - 188px);
+  max-width:1260px;
+  margin:auto;
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+.cover .page-inner{min-height:calc(100vh - 188px)}
+.page-number{position:absolute;top:0;right:0}
+
+.reader-controls{display:none}
+.hint{display:none}
+
+/* Let longer pages breathe naturally */
+.story-grid,.gate-grid,.evidence-grid,.project-layout,.final-grid,.contact-layout{
+  max-height:none;
+}
+
+/* Language switch */
+.lang-switch{
+  position:fixed;
+  z-index:100;
+  top:104px;
+  right:18px;
+  display:flex;
+  align-items:center;
+  gap:2px;
+  padding:3px;
+  border:1px solid var(--ink);
+  background:rgba(238,229,209,.95);
+  backdrop-filter:blur(7px);
+  box-shadow:3px 3px 0 rgba(23,21,18,.12);
+  font:700 9px var(--mono);
+  letter-spacing:.06em;
+}
+.lang-switch button{
+  border:0;
+  background:transparent;
+  color:var(--ink);
+  padding:5px 7px;
+  cursor:pointer;
+  font:inherit;
+}
+.lang-switch button.active{
+  background:var(--ink);
+  color:var(--paper);
+}
+.lang-switch button:hover{background:var(--red);color:var(--paper)}
+@media(max-width:650px){
+  .lang-switch{top:82px;right:10px}
+  .page{padding:100px 22px 58px}
+  .page-inner,.cover .page-inner{min-height:calc(100vh - 158px)}
+}
+
+/* Small section marker so the vertical version still feels editorial. */
+.page:not(.cover)::after{
+  content:"THE MITSOUKA TIMES";
+  position:absolute;
+  left:6vw;
+  bottom:24px;
+  font:8px var(--mono);
+  letter-spacing:.16em;
+  opacity:.42;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="lang-switch" aria-label="Language">
+  <button id="langFR" type="button">FR</button>
+  <button id="langEN" type="button" class="active">EN</button>
+</div>
+
+
+
+<!-- THE OPENING -->
+<div class="loader" id="loader" aria-hidden="true">
+  <div class="paper-opening">
+    <div class="sheet"></div>
+    <div class="sheet left"></div>
+    <div class="sheet right"></div>
+  </div>
+  <div class="loader-copy">THE PAPER IS OPENING · READ THE STORY</div>
+</div>
+
+<div class="site">
+<header class="masthead">
+  <div class="mast-top">
+    <span>VOL. I — SPECIAL EDITION</span>
+    <span>PORT-AU-PRINCE · HAÏTI</span>
+    <span>SEPTEMBER 2026</span>
+  </div>
+  <div class="mast-brand">
+    <div class="logo">The Mitsouka <span>Times</span></div>
+    <div class="issue"><strong>THE WOMAN IN TECH ISSUE</strong><br>SCROLL TO READ · 08 STORIES</div>
+  </div>
+  <div class="progress" id="progress"></div>
+</header>
+
+<main class="reader" id="reader">
+
+<!-- 01 COVER -->
+<section class="page cover">
+  <div class="page-inner cover-grid">
+    <div class="cover-copy">
+      <div class="kicker-big">A SPECIAL EDITION · HER STORY</div>
+      <h1 class="cover-title">She was<br>not <span class="red">supposed</span><br>to be here.</h1>
+      <p class="cover-sub">A girl from Haiti. A keyboard. A field that still has too many locked doors. This is not a story about fitting in. It is about building a place at the table.</p>
+      <div class="cover-meta">
+        <span>Mitsouka Lumérant</span><span>Woman · IT · Vision</span><span>Front Page</span>
+      </div>
+      <div style="margin-top:18px"><a class="cv-button" href="Mitsouka-Lumerant-CV.pdf" target="_blank" rel="noopener">DOWNLOAD / READ MY CV ↗</a></div>
+    </div>
+    <div class="cover-art">
+      <img class="photo" src="portrait.jpg" alt="Mitsouka Lumérant ">
+      <div class="halftone"></div>
+      <div class="cover-stamp">WOMAN<br>IN<br>TECH<br>◆</div>
+      <div class="cover-note">BREAKING:<br><br>She didn't wait for permission.</div>
+    </div>
+    <div class="page-number">PAGE <b>01</b> / 08</div>
+  </div>
+</section>
+
+<!-- 02 THE GIRL -->
+<section class="page">
+  <div class="page-inner">
+    <div class="page-number">PAGE <b>02</b> / 08</div>
+    <p class="eyebrow">The Girl Behind The Byline</p>
+    <h2 class="page-title">Before the <em>code</em>, there was curiosity.</h2>
+    <hr class="rule">
+    <div class="story-grid">
+      <div>
+        <p class="lede">I come from a country that is rarely the first name people associate with technology. That has never been a reason for me to stay outside the room.</p>
+        <div class="columns">
+          <p>My story started with a simple question: <strong>why?</strong> Why does a system work? Why does an application fail? Why can't an idea become something real?</p>
+          <p>At ESIH, those questions became algorithms, databases, software engineering and long nights in front of a screen. I learned that technology is not magic. It is a language — and languages can be learned.</p>
+          <p>Today I move between software development, data, IT support and the cloud. I am still learning. But I am no longer simply looking for a place in technology.</p>
+          <p>I am learning how to <strong>build one.</strong></p>
+        </div>
+        <div class="pull">“My background is not the limitation of my story. It is part of what makes the story worth telling.”</div>
+      </div>
+      <aside class="side-note">
+        <h3>By the numbers.</h3>
+        <p>A small dossier on the person behind this edition.</p>
+        <ul class="fact-list">
+          <li><b>01</b> · Computer Science / IT</li>
+          <li><b>02</b> · Software + Data + IT</li>
+          <li><b>03</b> · Haiti → Global ambitions</li>
+          <li><b>04</b> · Woman in Technology</li>
+          <li><b>05</b> · Still becoming</li>
+        </ul>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- 03 THE GATE -->
+<section class="page gate">
+  <div class="page-inner">
+    <div class="page-number">PAGE <b>03</b> / 08</div>
+    <p class="eyebrow">The Gate</p>
+    <h2 class="page-title">Wrong passport.<br>Wrong stereotype.<br><em>Right ambition.</em></h2>
+    <hr class="rule" style="border-color:#6f675a">
+    <div class="gate-grid">
+      <div class="gate-quote">“There are fields where people like me are still expected to be the exception.”</div>
+      <div class="gate-copy">
+        <p class="red-line">The story is bigger than a résumé.</p>
+        <p>Being a Haitian woman entering technology means carrying two truths at once: the industry is changing, and there is still work to do.</p>
+        <p>I don't want my identity to be a decorative sentence at the top of a CV. I want it to become <strong>evidence</strong> that talent can come from unexpected places.</p>
+        <p>So I keep learning. I build software. I work with data. I troubleshoot systems. I ask questions. I show up.</p>
+        <p>And every project becomes another small argument against the idea that technology belongs to someone else.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 04 EVIDENCE -->
+<section class="page">
+  <div class="page-inner">
+    <div class="page-number">PAGE <b>04</b> / 08</div>
+    <p class="eyebrow">The Evidence</p>
+    <h2 class="page-title">Proof is better than <em>potential.</em></h2>
+    <hr class="rule">
+    <div class="evidence-grid">
+      <article class="manifesto">
+        <h3>What I am building.</h3>
+        <p>I am not trying to collect technology names. I am building the ability to move from an idea to a working solution — from database to interface, from data to insight, from problem to system.</p>
+        <p>My current direction sits at the intersection of <strong>software engineering, data, cloud and IT operations.</strong></p>
+        <p>The stack changes. The principle doesn't: understand the problem, build carefully, learn from what breaks, and make it better.</p>
+        <div class="pull">CREATE · ANALYZE · SOLVE · LEARN · LEAD</div>
+      </article>
+      <div class="skills">
+        <div class="skill"><b>Java</b><span>Spring Boot · JavaFX · Swing</span></div>
+        <div class="skill"><b>Python</b><span>Automation · Data · Problem solving</span></div>
+        <div class="skill"><b>SQL</b><span>MySQL · SQL Server · SSMS</span></div>
+        <div class="skill"><b>Data</b><span>Power BI · Azure Data Factory</span></div>
+        <div class="skill"><b>Web</b><span>HTML · CSS · PHP · ASP.NET</span></div>
+        <div class="skill"><b>IT</b><span>Support · Troubleshooting · Operations</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 05 PROJECTS -->
+<section class="page projects">
+  <div class="page-inner">
+    <div class="page-number">PAGE <b>05</b> / 08</div>
+    <p class="eyebrow">The Work · Academic Files</p>
+    <h2 class="page-title">Things I built while <em>becoming.</em></h2>
+    <hr class="rule">
+    <div class="project-layout">
+      <div class="project-lead">
+        <h3>THE<br>WORK<br>IS THE<br>EVIDENCE.</h3>
+        <p>These are not imaginary case studies. They are projects from my academic journey — each one showing a different side of how I think, build and solve.</p>
+        <p><strong>Selected files:</strong> backend · web · mobile · databases.</p>
+        <a class="cv-button" href="Mitsouka-Lumerant-CV.pdf" target="_blank" rel="noopener">READ MY CV ↗</a>
+      </div>
+      <div>
+        <article class="project-card">
+          <div class="num">01</div>
+          <div><h4>API REST — Gestion des tâches & employés</h4><p>Une API REST complète avec opérations CRUD et architecture en couches Controller / Service / Repository, connectée à MySQL avec JPA/Hibernate.</p><div class="tags"><span>Java</span><span>Spring Boot</span><span>JPA</span><span>MySQL</span></div><div class="project-result">RESULT · API stable, documentée et réutilisable</div></div>
+        </article>
+        <article class="project-card">
+          <div class="num">02</div>
+          <div><h4>Application de gestion hospitalière</h4><p>Application web pour la gestion des patients, paiements et suivis médicaux, développée avec Entity Framework et des identifiants GUID.</p><div class="tags"><span>C#</span><span>ASP.NET</span><span>Entity Framework</span><span>MySQL</span></div><div class="project-result">RESULT · Second écosystème backend maîtrisé : C# / .NET</div></div>
+        </article>
+        <article class="project-card">
+          <div class="num">03</div>
+          <div><h4>Bac — Application mobile offline</h4><p>Application mobile de préparation au baccalauréat fonctionnant sans connexion, avec navigation multi-écrans, contenu éducatif et thèmes clair / sombre.</p><div class="tags"><span>Flutter</span><span>Dart</span><span>Android</span><span>Offline</span></div><div class="project-result">RESULT · Application complète déployable sur Android</div></div>
+        </article>
+        <article class="project-card">
+          <div class="num">04</div>
+          <div><h4>Site Web — Ministère du Tourisme d’Haïti</h4><p>Interface web responsive avec composants dynamiques React, pensée autour de principes UI/UX pour un rendu professionnel et accessible.</p><div class="tags"><span>HTML</span><span>CSS</span><span>React</span><span>UI/UX</span></div><div class="project-result">RESULT · Interface responsive et dynamique</div></div>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 06 FIELD REPORT / FUTURE -->
+<section class="page">
+  <div class="page-inner">
+    <div class="page-number">PAGE <b>06</b> / 08</div>
+    <p class="eyebrow">Field Report · The Next Edition</p>
+    <h2 class="page-title">The story is <em>not finished.</em></h2>
+    <hr class="rule">
+    <div class="final-grid">
+      <div class="timeline">
+        <article class="event"><span class="date">Education</span><h3>ESIH</h3><p>Computer Science / Information Technology — building the foundation.</p></article>
+        <article class="event"><span class="date">Experience</span><h3>World Vision Haïti</h3><p>IT internship — support, troubleshooting, systems and the reality of technology in an organization.</p></article>
+        <article class="event"><span class="date">Academic community</span><h3>23es Journées Scientifiques</h3><p>ESIH representative — connecting technology, research and the wider community.</p></article>
+        <article class="event"><span class="date">Currently learning</span><h3>Cloud · SQL · Data</h3><p>Because the next chapter requires new tools.</p></article>
+      </div>
+      <div class="future">
+        <small>EDITOR'S NOTE · NEXT ISSUE</small>
+        <h2>Watch<br>this <em>space.</em></h2>
+        <p>Master's applications. Bigger systems. Better questions. New places. More things that haven't been built yet.</p>
+        <strong style="font:11px var(--mono);letter-spacing:.12em">MITSOUKA LUMÉRANT · WOMAN × IT × VISION</strong>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- 07 CONTACT / THE CORRESPONDENCE DESK -->
+<section class="page contact-page">
+  <div class="page-inner">
+    <div class="page-number">PAGE <b>07</b> / 08</div>
+    <p class="eyebrow">The Correspondence Desk</p>
+    <h2 class="page-title">Every good story leaves an <em>address.</em></h2>
+    <hr class="rule">
+    <div class="contact-layout">
+      <div class="contact-intro">
+        <h3>So…<br><em>let's talk.</em></h3>
+        <p>Maybe you found a project interesting. Maybe you are looking for someone curious enough to learn a new system, stubborn enough to solve a difficult problem, or ambitious enough to build something from scratch.</p>
+        <p>Whatever brought you here, the next page doesn't have to be the end of the story.</p>
+        <div class="contact-note">The desk is open for opportunities · collaborations · internships · technology conversations</div>
+        <div class="contact-links">
+          <a href="https://www.linkedin.com/in/mitsouka-lumerant-098bb1276/" target="_blank" rel="noopener">LinkedIn ↗</a>
+          <a href="https://github.com/Soukamila" target="_blank" rel="noopener">GitHub ↗</a>
+        </div>
+      </div>
+      <form class="contact-form" id="contactForm">
+        <div class="form-head"><strong>Letter to the Editor</strong><span>Confidential · 2026</span></div>
+        <label for="contactName">Your name</label>
+        <input id="contactName" name="name" required placeholder="Jane Doe">
+        <label for="contactEmail">Your email</label>
+        <input id="contactEmail" name="email" type="email" required placeholder="you@example.com">
+        <label for="contactSubject">Subject</label>
+        <input id="contactSubject" name="subject" placeholder="A project, opportunity, question…">
+        <label for="contactMessage">Your message</label>
+        <textarea id="contactMessage" name="message" required placeholder="Write your letter here…"></textarea>
+        <button class="contact-submit" type="submit">Send the letter →</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- 08 CLOSING / THANK YOU -->
+<section class="page closing">
+  <div class="page-inner closing-inner">
+    <div class="page-number">FINAL PAGE · 08 / 08</div>
+    <p class="eyebrow">End of Edition</p>
+    <div class="closing-mark">M</div>
+    <h2>Thank you for reading<br><em>my story.</em></h2>
+    <hr class="closing-rule">
+    <p>This edition ends here. The story doesn't. There are still places to go, systems to understand, problems to solve, people to learn from, and things that have not been built yet.</p>
+    <div class="close-meta">Mitsouka Lumérant · Woman × IT × Vision · Haiti → Everywhere</div>
+    <button class="reopen" id="reopen">↺ Read the front page again</button>
+  </div>
+</section>
+
+</main>
+
+<div class="reader-controls" aria-label="Newspaper navigation">
+  <button id="prev" aria-label="Previous page">←</button>
+  <div class="dots" id="dots">
+    <span class="dot active"></span><span class="dot"></span><span class="dot"></span>
+    <span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span>
+  </div>
+  <button id="next" aria-label="Next page">→</button>
+</div>
+<div class="hint">scroll horizontally · use arrows · swipe on mobile</div>
+</div>
+
+
+<script>
+(function(){
+  const pages=[...document.querySelectorAll('.page')];
+  const progress=document.getElementById('progress');
+  const loader=document.getElementById('loader');
+
+  window.addEventListener('load',()=>setTimeout(()=>{
+    loader.classList.add('done');
+  },2100));
+
+  function updateProgress(){
+    const max=document.documentElement.scrollHeight-window.innerHeight;
+    const pct=max>0 ? Math.min(100,Math.max(0,window.scrollY/max*100)) : 100;
+    progress.style.width=pct+'%';
+  }
+  window.addEventListener('scroll',updateProgress,{passive:true});
+  window.addEventListener('resize',updateProgress);
+  updateProgress();
+
+  const reopen=document.getElementById('reopen');
+  if(reopen) reopen.onclick=()=>window.scrollTo({top:0,behavior:'smooth'});
+
+  const contactForm=document.getElementById('contactForm');
+  if(contactForm){
+    contactForm.addEventListener('submit',function(e){
+      e.preventDefault();
+      const name=document.getElementById('contactName').value.trim();
+      const email=document.getElementById('contactEmail').value.trim();
+      const subject=document.getElementById('contactSubject').value.trim() || 'Portfolio inquiry';
+      const message=document.getElementById('contactMessage').value.trim();
+      const destination='Mitsoukalumerant@gmail.com';
+      const body='Name: '+name+'\nEmail: '+email+'\n\n'+message;
+      window.location.href='mailto:'+destination+'?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body);
+    });
+  }
+
+  /* ---------- Language switch ---------- */
+  const translations={
+    fr:{
+      ".issue":"<strong>ÉDITION FEMME & TECHNOLOGIE</strong><br>FAIRE DÉFILER POUR LIRE · 08 HISTOIRES",
+      ".cover .kicker-big":"ÉDITION SPÉCIALE · SON HISTOIRE",
+      ".cover .cover-title":"Elle n'était<br><span class='red'>pas censée</span><br>être ici.",
+      ".cover .cover-sub":"Une fille d'Haïti. Un clavier. Un domaine où les portes sont encore trop nombreuses à être fermées. Ce n'est pas une histoire de conformité. C'est une histoire de prendre sa place.",
+      ".cover .cover-meta":"Mitsouka Lumérant · Femme · IT · Vision · Une",
+      ".cover-note":"DERNIÈRE MINUTE:<br><br>Elle n'a pas attendu qu'on lui donne la permission.",
+      ".page:nth-of-type(2) .eyebrow":"La fille derrière la signature",
+      ".page:nth-of-type(2) .page-title":"Avant le <em>code</em>, il y avait la curiosité.",
+      ".page:nth-of-type(2) .lede":"Je viens d'un pays que l'on associe rarement en premier lieu à la technologie. Cela n'a jamais été une raison pour rester à l'extérieur.",
+      ".page:nth-of-type(2) .columns p:nth-child(1)":"Mon histoire a commencé par une question simple : <strong>pourquoi ?</strong> Pourquoi un système fonctionne-t-il ? Pourquoi une application échoue-t-elle ? Pourquoi une idée ne pourrait-elle pas devenir quelque chose de réel ?",
+      ".page:nth-of-type(2) .columns p:nth-child(2)":"À l'ESIH, ces questions sont devenues des algorithmes, des bases de données, du génie logiciel et de longues nuits devant un écran. J'ai appris que la technologie n'est pas magique. C'est un langage — et les langages s'apprennent.",
+      ".page:nth-of-type(2) .columns p:nth-child(3)":"Aujourd'hui, j'évolue entre développement logiciel, données, support IT et cloud. Je suis encore en apprentissage. Mais je ne cherche plus simplement une place dans la technologie.",
+      ".page:nth-of-type(2) .columns p:nth-child(4)":"J'apprends à <strong>la construire.</strong>",
+      ".page:nth-of-type(2) .pull":"« Mon parcours n'est pas la limite de mon histoire. Il fait partie de ce qui rend cette histoire digne d'être racontée. »",
+      ".page:nth-of-type(2) .side-note h3":"En quelques chiffres.",
+      ".page:nth-of-type(2) .side-note p":"Un petit dossier sur la personne derrière cette édition.",
+      ".page:nth-of-type(2) .fact-list":"<li><b>01</b> · Informatique / IT</li><li><b>02</b> · Logiciel + Data + IT</li><li><b>03</b> · Haïti → ambitions internationales</li><li><b>04</b> · Femme dans la technologie</li><li><b>05</b> · Toujours en devenir",
+      ".gate .eyebrow":"La porte",
+      ".gate .page-title":"Mauvais passeport.<br>Mauvais stéréotype.<br><em>Bonne ambition.</em>",
+      ".gate .gate-quote":"« Il existe des domaines où des personnes comme moi sont encore censées être l'exception. »",
+      ".gate .red-line":"L'histoire est plus grande qu'un CV.",
+      ".gate .gate-copy p:nth-child(2)":"Être une femme haïtienne qui entre dans la technologie, c'est porter deux vérités à la fois : l'industrie change, et il reste encore du chemin à parcourir.",
+      ".gate .gate-copy p:nth-child(3)":"Je ne veux pas que mon identité soit une phrase décorative en haut d'un CV. Je veux qu'elle devienne une <strong>preuve</strong> que le talent peut venir d'endroits inattendus.",
+      ".gate .gate-copy p:nth-child(4)":"Alors je continue d'apprendre. Je construis des logiciels. Je travaille avec les données. Je dépanne des systèmes. Je pose des questions. Je me présente.",
+      ".gate .gate-copy p:nth-child(5)":"Et chaque projet devient un petit argument de plus contre l'idée que la technologie appartient à quelqu'un d'autre.",
+      ".page:nth-of-type(4) .eyebrow":"Les preuves",
+      ".page:nth-of-type(4) .page-title":"La preuve vaut mieux que le <em>potentiel.</em>",
+      ".manifesto h3":"Ce que je construis.",
+      ".manifesto p:nth-of-type(1)":"Je n'essaie pas de collectionner des noms de technologies. Je construis la capacité de passer d'une idée à une solution fonctionnelle — de la base de données à l'interface, des données à l'insight, du problème au système.",
+      ".manifesto p:nth-of-type(2)":"Ma direction actuelle se situe à l'intersection du <strong>génie logiciel, de la data, du cloud et des opérations IT.</strong>",
+      ".manifesto p:nth-of-type(3)":"La stack change. Le principe reste le même : comprendre le problème, construire avec soin, apprendre de ce qui casse et améliorer.",
+      ".page:nth-of-type(5) .eyebrow":"Le travail · Dossiers académiques",
+      ".page:nth-of-type(5) .page-title":"Des choses que j'ai construites en <em>devenant.</em>",
+      ".project-lead h3":"LE<br>TRAVAIL<br>EST LA<br>PREUVE.",
+      ".project-lead p:nth-of-type(1)":"Ce ne sont pas des études de cas imaginaires. Ce sont des projets issus de mon parcours académique — chacun montrant une facette différente de ma façon de réfléchir, construire et résoudre.",
+      ".project-lead p:nth-of-type(2)":"<strong>Dossiers sélectionnés :</strong> backend · web · mobile · bases de données.",
+      ".project-card:nth-child(1) h4":"API REST — Gestion des tâches & employés",
+      ".project-card:nth-child(1) p":"Une API REST complète avec opérations CRUD et architecture Controller / Service / Repository, connectée à MySQL avec JPA/Hibernate.",
+      ".project-card:nth-child(2) h4":"Application de gestion hospitalière",
+      ".project-card:nth-child(2) p":"Application web pour la gestion des patients, paiements et suivis médicaux, développée avec Entity Framework et des identifiants GUID.",
+      ".project-card:nth-child(3) h4":"Bac — Application mobile offline",
+      ".project-card:nth-child(3) p":"Application mobile de préparation au baccalauréat fonctionnant sans connexion, avec navigation multi-écrans, contenu éducatif et thèmes clair / sombre.",
+      ".project-card:nth-child(4) h4":"Site Web — Ministère du Tourisme d’Haïti",
+      ".project-card:nth-child(4) p":"Interface web responsive avec composants dynamiques React, pensée autour de principes UI/UX pour un rendu professionnel et accessible.",
+      ".page:nth-of-type(6) .eyebrow":"Rapport terrain · La prochaine édition",
+      ".page:nth-of-type(6) .page-title":"L'histoire n'est <em>pas terminée.</em>",
+      ".event:nth-child(1) .date":"Formation",
+      ".event:nth-child(1) p":"Informatique / Technologies de l'information — construire les fondations.",
+      ".event:nth-child(2) .date":"Expérience",
+      ".event:nth-child(2) p":"Stage IT — support, dépannage, systèmes et réalité de la technologie dans une organisation.",
+      ".event:nth-child(3) .date":"Communauté académique",
+      ".event:nth-child(3) p":"Représentante de l'ESIH — connecter technologie, recherche et communauté.",
+      ".event:nth-child(4) .date":"En apprentissage",
+      ".event:nth-child(4) h3":"Cloud · SQL · Data",
+      ".event:nth-child(4) p":"Parce que le prochain chapitre demande de nouveaux outils.",
+      ".future small":"NOTE DE LA RÉDACTION · PROCHAINE ÉDITION",
+      ".future h2":"Gardez<br>un œil sur <em>la suite.</em>",
+      ".future p":"Candidatures en Master. Systèmes plus ambitieux. Meilleures questions. De nouveaux horizons. Encore plus de choses à construire.",
+      ".contact-page .eyebrow":"Le bureau de correspondance",
+      ".contact-page .page-title":"Toute bonne histoire laisse une <em>adresse.</em>",
+      ".contact-intro h3":"Alors…<br><em>parlons.</em>",
+      ".contact-intro p:nth-of-type(1)":"Peut-être qu'un projet vous a intéressé. Peut-être que vous cherchez quelqu'un d'assez curieux pour apprendre un nouveau système, assez persévérant pour résoudre un problème difficile ou assez ambitieux pour construire quelque chose à partir de zéro.",
+      ".contact-intro p:nth-of-type(2)":"Quelle que soit la raison de votre visite, la prochaine page ne doit pas forcément être la fin de l'histoire.",
+      ".contact-note":"Le bureau est ouvert aux opportunités · collaborations · stages · conversations autour de la technologie",
+      ".form-head strong":"Lettre à la rédaction",
+      ".form-head span":"Confidentiel · 2026",
+      "label[for='contactName']":"Votre nom",
+      "label[for='contactEmail']":"Votre email",
+      "label[for='contactSubject']":"Objet",
+      "label[for='contactMessage']":"Votre message",
+      ".contact-submit":"Envoyer la lettre →",
+      ".closing .eyebrow":"Fin de l'édition",
+      ".closing h2":"Merci d'avoir lu<br><em>mon histoire.</em>",
+      ".closing p":"Cette édition s'arrête ici. L'histoire, elle, continue. Il reste des endroits à découvrir, des systèmes à comprendre, des problèmes à résoudre, des personnes auprès desquelles apprendre et des choses qui n'ont pas encore été construites.",
+      ".close-meta":"Mitsouka Lumérant · Femme × IT × Vision · Haïti → Partout",
+      "#reopen":"↺ Relire la une"
+    }
+  };
+
+  const original={};
+  function remember(selector){
+    document.querySelectorAll(selector).forEach(el=>{
+      if(!original[selector]) original[selector]=[];
+      if(original[selector].length < document.querySelectorAll(selector).length) original[selector].push(el.innerHTML);
+    });
+  }
+
+  Object.keys(translations.fr).forEach(remember);
+
+  function apply(lang){
+    const dict=lang==='fr'?translations.fr:null;
+    Object.keys(original).forEach(selector=>{
+      const els=document.querySelectorAll(selector);
+      els.forEach((el,i)=>{
+        if(lang==='fr' && dict[selector]!==undefined){
+          const value=Array.isArray(dict[selector]) ? dict[selector][i] : dict[selector];
+          if(value!==undefined) el.innerHTML=value;
+        }else if(lang==='en'){
+          el.innerHTML=original[selector][i] ?? original[selector][0] ?? '';
+        }
+      });
+    });
+    const placeholders = lang==='fr'
+      ? {
+          contactName:'Votre nom',
+          contactEmail:'vous@exemple.com',
+          contactSubject:'Projet, opportunité, question…',
+          contactMessage:'Écrivez votre message ici…'
+        }
+      : {
+          contactName:'Jane Doe',
+          contactEmail:'you@example.com',
+          contactSubject:'A project, opportunity, question…',
+          contactMessage:'Write your letter here…'
+        };
+    Object.keys(placeholders).forEach(id=>{
+      const el=document.getElementById(id);
+      if(el) el.placeholder=placeholders[id];
+    });
+
+    document.documentElement.lang=lang==='fr'?'fr':'en';
+    document.getElementById('langFR').classList.toggle('active',lang==='fr');
+    document.getElementById('langEN').classList.toggle('active',lang==='en');
+    localStorage.setItem('mitsouka-lang',lang);
+  }
+
+  document.getElementById('langFR').addEventListener('click',()=>apply('fr'));
+  document.getElementById('langEN').addEventListener('click',()=>apply('en'));
+  apply(localStorage.getItem('mitsouka-lang') || 'en');
+})();
+</script>
+
+
+
+</body>
+</html>
